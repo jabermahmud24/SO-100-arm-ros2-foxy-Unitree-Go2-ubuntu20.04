@@ -25,8 +25,8 @@ def get_robot_description(context, *args, **kwargs):
 
     doc = xacro.process_file(xacro_file, mappings={
         'prefix': prefix,
-        'use_sim': 'true',
-        'use_mock_hardware': 'true',
+        'use_sim': 'false',
+        'use_fake_hardware': 'true',
     })
 
     robot_desc = doc.toprettyxml(indent='  ')
