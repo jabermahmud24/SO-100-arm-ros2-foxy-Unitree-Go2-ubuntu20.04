@@ -17,7 +17,7 @@
     <xacro:so_arm_100_5dof prefix="$(arg prefix)" />
 
     <xacro:so_arm_100_ros2_control 
-        name="SOARM100" 
+        name="SOARM100System" 
         initial_positions_file="$(arg initial_positions_file)"
         use_fake_hardware="$(arg use_fake_hardware)"
         serial_port="$(arg serial_port)"
