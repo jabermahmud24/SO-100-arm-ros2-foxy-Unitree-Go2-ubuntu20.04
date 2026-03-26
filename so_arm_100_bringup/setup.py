@@ -18,7 +18,7 @@ setup(
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='Pyo',
+    maintainer='Bruk Gebregziabher',
     maintainer_email='bruk@signalbotics.com',
     description='SO-100 bringup ROS 2 package.',
     license='Apache 2.0',
