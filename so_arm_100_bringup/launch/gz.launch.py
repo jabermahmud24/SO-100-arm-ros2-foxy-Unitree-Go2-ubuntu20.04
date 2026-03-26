@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+import tempfile
 import xacro
 
 from ament_index_python.packages import get_package_share_directory
@@ -17,6 +18,38 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 from launch_ros.parameter_descriptions import ParameterValue
+
+
+def generate_bridge_config(
+    template_file: str, world_name: str, model_name: str, prefix: str = ''
+) -> str:
+    '''Generate a ros_gz_bridge config file from a template'''
+    with open(template_file, 'r') as file:
+        config = file.read()
+
+    config = config.replace(
+        '{{ world_name }}',
+        f'{world_name}',
+    )
+
+    config = config.replace(
+        '{{ model_name }}',
+        f'{model_name}',
+    )
+
+    config = config.replace(
+        '{{ prefix }}',
+        f'{prefix}',
+    )
+
+    temp_file = tempfile.NamedTemporaryFile(delete=False, suffix='.yaml')
+    temp_file_name = temp_file.name
+
+    with open(temp_file_name, 'w') as temp_file:
+        temp_file.write(config)
+
+    return temp_file_name
+
 
 def get_robot_description(context, *args, **kwargs):
     so_arm_100_description_path = os.path.join(
@@ -116,6 +149,11 @@ def generate_launch_description():
     ])
 
     def launch_setup(context, *args, **kwargs):
+        dof = LaunchConfiguration('dof').perform(context)
+        prefix = LaunchConfiguration('prefix').perform(context)
+        world_name = LaunchConfiguration('world').perform(context)
+        model_name = 'so_arm_100'
+
         descriptions = get_robot_description(context)
 
         robot_desc = descriptions['robot_description']
@@ -169,7 +207,7 @@ def generate_launch_description():
         ros2_control_file = os.path.join(
             so_arm_100_moveit_config_path,
             'config',
-            'controllers_5dof.yaml',
+            f'controllers_{dof}dof.yaml',
         )
 
         # controller manager (if not using gz_ros2_control)
@@ -222,10 +260,15 @@ def generate_launch_description():
         )
 
         # TODO: rename config file
-        bridge_config_file = os.path.join(
+        bridge_template_file = os.path.join(
             so_arm_100_bringup_path,
             'config',
             'ros_gz_bridge.yaml',
+        )
+
+        # Generate bridge config from template
+        bridge_config_file = generate_bridge_config(
+            bridge_template_file, world_name, model_name, prefix
         )
 
         # ros_gz_bridge and relay when using topic based control
@@ -240,8 +283,8 @@ def generate_launch_description():
         command_relay = Node(
             condition=IfCondition(LaunchConfiguration('use_topic_hardware_interface')),
             package="so_arm_100_bringup",
-            executable="so_arm_100_5dof_cmd_relay",
-            parameters=[],
+            executable=f"so_arm_100_{dof}dof_cmd_relay",
+            parameters=[{"prefix": prefix}],
             output="screen",
         )
 
