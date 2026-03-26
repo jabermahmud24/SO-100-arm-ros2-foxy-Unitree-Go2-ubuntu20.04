@@ -96,7 +96,7 @@
       <plugin name="gz::sim::systems::JointPositionController"
         filename="gz-sim-joint-position-controller-system">
         <joint_name>${prefix}Wrist_Roll</joint_name>
-        <!-- <topic>/model/so_arm_100_5dof/joint/${prefix}Wrist_Roll/0/cmd_pos</topic> -->
+        <!-- <topic>/model/so_arm_100/joint/${prefix}Wrist_Roll/0/cmd_pos</topic> -->
         <p_gain>5.0</p_gain>
         <i_gain>0.5</i_gain>
         <d_gain>0.1</d_gain>
@@ -108,7 +108,7 @@
       <plugin name="gz::sim::systems::JointPositionController"
         filename="gz-sim-joint-position-controller-system">
         <joint_name>${prefix}Gripper</joint_name>
-        <!-- <topic>/model/so_arm_100_5dof/joint/${prefix}Gripper/0/cmd_pos</topic> -->
+        <!-- <topic>/model/so_arm_100/joint/${prefix}Gripper/0/cmd_pos</topic> -->
         <p_gain>5.0</p_gain>
         <i_gain>0.5</i_gain>
         <d_gain>0.1</d_gain>
