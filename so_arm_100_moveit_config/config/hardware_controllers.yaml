@@ -28,7 +28,6 @@ arm_controller:
       - Elbow
       - Wrist_Pitch
       - Wrist_Roll
-    interface_name: position
     command_interfaces:
       - position
     state_interfaces:
