@@ -1,12 +1,16 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
-  <xacro:macro name="so_arm_100_5dof_gazebo" params="prefix ros2_controllers_file:=^|'' use_topic_hardware_interface:=^|false">
+  <xacro:macro name="so_arm_100_5dof_gazebo" params="prefix initial_positions_file:=^|'' ros2_controllers_file:=^|'' use_topic_hardware_interface:=^|false">
   <!--
   Parameters
       prefix: prefix for joints and links
+      initial_positions_file: initial positions file for joints
       ros2_controllers_file: ros2_controller configuration file for gz_ros2_control
       use_topic_hardware_interface: true if using topic based control
   -->
+  <xacro:if value="${initial_positions_file != ''}">
+      <xacro:property name="initial_positions" value="${xacro.load_yaml(initial_positions_file)['initial_positions']}"/>
+  </xacro:if>
 
   <gazebo>
     <plugin name="gz::sim::systems::JointStatePublisher"
@@ -56,6 +60,9 @@
         <i_min>-1</i_min>
         <cmd_max>100.0</cmd_max>
         <cmd_min>-100.0</cmd_min>
+        <xacro:if value="${initial_positions_file != ''}">
+          <initial_position>${initial_positions['Shoulder_Rotation']}</initial_position>
+        </xacro:if>
       </plugin>
       <plugin name="gz::sim::systems::JointPositionController"
         filename="gz-sim-joint-position-controller-system">
@@ -68,6 +75,9 @@
         <i_min>-1</i_min>
         <cmd_max>100.0</cmd_max>
         <cmd_min>-100.0</cmd_min>
+        <xacro:if value="${initial_positions_file != ''}">
+          <initial_position>${initial_positions['Shoulder_Pitch']}</initial_position>
+        </xacro:if>
       </plugin>
       <plugin name="gz::sim::systems::JointPositionController"
         filename="gz-sim-joint-position-controller-system">
@@ -80,6 +90,9 @@
         <i_min>-1</i_min>
         <cmd_max>100.0</cmd_max>
         <cmd_min>-100.0</cmd_min>
+        <xacro:if value="${initial_positions_file != ''}">
+          <initial_position>${initial_positions['Elbow']}</initial_position>
+        </xacro:if>
       </plugin>
       <plugin name="gz::sim::systems::JointPositionController"
         filename="gz-sim-joint-position-controller-system">
@@ -92,6 +105,9 @@
         <i_min>-1</i_min>
         <cmd_max>100.0</cmd_max>
         <cmd_min>-100.0</cmd_min>
+        <xacro:if value="${initial_positions_file != ''}">
+          <initial_position>${initial_positions['Wrist_Pitch']}</initial_position>
+        </xacro:if>
       </plugin>
       <plugin name="gz::sim::systems::JointPositionController"
         filename="gz-sim-joint-position-controller-system">
@@ -104,6 +120,9 @@
         <i_min>-1</i_min>
         <cmd_max>100.0</cmd_max>
         <cmd_min>-100.0</cmd_min>
+        <xacro:if value="${initial_positions_file != ''}">
+          <initial_position>${initial_positions['Wrist_Roll']}</initial_position>
+        </xacro:if>
       </plugin>
       <plugin name="gz::sim::systems::JointPositionController"
         filename="gz-sim-joint-position-controller-system">
@@ -116,6 +135,9 @@
         <i_min>-1</i_min>
         <cmd_max>100.0</cmd_max>
         <cmd_min>-100.0</cmd_min>
+        <xacro:if value="${initial_positions_file != ''}">
+          <initial_position>${initial_positions['Gripper']}</initial_position>
+        </xacro:if>
       </plugin>
     </xacro:if>
 
