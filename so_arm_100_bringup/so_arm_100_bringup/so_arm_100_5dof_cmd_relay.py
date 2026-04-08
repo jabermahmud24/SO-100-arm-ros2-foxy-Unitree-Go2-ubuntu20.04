@@ -40,10 +40,13 @@ class SOARM1005DofCommandRelay(Node):
         # Create publishers and subscriptions
         self.pubs = {}
         for joint_name, topic in JOINT_TOPICS.items():
+            prefixed_joint_name = f"{prefix}{joint_name}"
             prefixed_topic = f"{prefix}{topic}"
-            self.pubs[joint_name] = self.create_publisher(Float64, prefixed_topic, 10)
+            self.pubs[prefixed_joint_name] = self.create_publisher(
+                Float64, prefixed_topic, 10
+            )
         self.create_subscription(
-            JointState, "/robot_joint_commands", self.on_joint_command, 10
+            JointState, "robot_joint_commands", self.on_joint_command, 10
         )
 
     def on_joint_command(self, msg):
