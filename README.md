@@ -23,7 +23,7 @@ Compared with the original repository, this version includes modifications for:
 - Integration/testing with the Unitree Go2 robot
 - Adjustments needed for the mounted SO-100/100-arm setup
 
-THE ORIGINAL README FILE IS AS FOLLOWS:
+# THE ORIGINAL README FILE IS AS FOLLOWS:
 
 
 # SO-100 Robot Arm ROS2 Package
