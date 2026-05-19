@@ -6,6 +6,35 @@ The original SO-100 ROS 2 package was developed for ROS 2 Humble. This repositor
 
 ---
 
+## Acknowledgments
+
+This repository is based on the original ROS 2 SO-100 arm repository by Bruk G.:
+
+```text
+https://github.com/brukg/SO-100-arm
+```
+
+The original repository provides the base ROS 2 package structure, robot description, launch files, controller configuration, and MoveIt/Gazebo-related setup.
+
+This repository also includes/adapts the SO-100 hardware interface package:
+
+```text
+https://github.com/brukg/so_arm_100_hardware
+```
+
+The hardware interface provides ROS 2 Control support for the SO-100 arm, including serial communication with the physical robot and topic-based simulation support.
+
+This version modifies and adapts the original work for:
+
+- ROS 2 Foxy
+- Ubuntu 20.04
+- Unitree Go2 onboard computer
+- Mounted SO-100 / SO-ARM100 arm operation
+
+Credit is preserved to the original authors and repositories.
+
+---
+
 ## Repository Status
 
 This repository is intended for:
@@ -803,34 +832,7 @@ Before running the physical arm:
 
 ---
 
-## Acknowledgments
 
-This repository is based on the original ROS 2 SO-100 arm repository by Bruk G.:
-
-```text
-https://github.com/brukg/SO-100-arm
-```
-
-The original repository provides the base ROS 2 package structure, robot description, launch files, controller configuration, and MoveIt/Gazebo-related setup.
-
-This repository also includes/adapts the SO-100 hardware interface package:
-
-```text
-https://github.com/brukg/so_arm_100_hardware
-```
-
-The hardware interface provides ROS 2 Control support for the SO-100 arm, including serial communication with the physical robot and topic-based simulation support.
-
-This version modifies and adapts the original work for:
-
-- ROS 2 Foxy
-- Ubuntu 20.04
-- Unitree Go2 onboard computer
-- Mounted SO-100 / SO-ARM100 arm operation
-
-Credit is preserved to the original authors and repositories.
-
----
 
 ## License
 
