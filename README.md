@@ -743,7 +743,7 @@ ros2 node list
 
 ---
 
-### 6. Joint names do not match
+### 6. Joint names may not match
 
 Your trajectory command must use the exact joint names expected by the controller.
 
