@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.10)
 project(so_arm_100_hardware)
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 # Add SCServo subdirectory
 add_subdirectory(include/SCServo_Linux)
 
@@ -9,6 +12,7 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 # find dependencies
+find_package(sensor_msgs REQUIRED)
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(hardware_interface REQUIRED)
@@ -29,7 +33,7 @@ target_include_directories(
 
 target_link_libraries(${PROJECT_NAME}
   SCServo
-  yaml-cpp::yaml-cpp
+  yaml-cpp
 )
 
 ament_target_dependencies(${PROJECT_NAME}
@@ -38,6 +42,7 @@ ament_target_dependencies(${PROJECT_NAME}
   pluginlib
   rclcpp_lifecycle
   std_srvs
+  sensor_msgs
 )
 
 pluginlib_export_plugin_description_file(hardware_interface so_arm_100_hardware.xml)

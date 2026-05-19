@@ -25,7 +25,7 @@ def generate_launch_description():
     arguments = LaunchDescription([
         DeclareLaunchArgument(
             'serial_port',
-            default_value='/dev/ttyUSB0',
+            default_value='/dev/ttyACM0',
             description='Servo controller board serial port'
         ),
         DeclareLaunchArgument(

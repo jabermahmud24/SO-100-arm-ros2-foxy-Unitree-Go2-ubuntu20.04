@@ -5,8 +5,9 @@
 #include "rclcpp/macros.hpp"
 #include <hardware_interface/system_interface.hpp>
 
-#include <rclcpp_lifecycle/state.hpp>
-#include <rclcpp_lifecycle/node_interfaces/lifecycle_node_interface.hpp>
+#include <thread>
+#include <mutex>
+#include <algorithm>
 
 #include "hardware_interface/handle.hpp"
 #include "hardware_interface/hardware_info.hpp"
@@ -27,25 +28,24 @@
 namespace so_arm_100_controller
 {
 
-using CallbackReturn = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
-
 class SOARM100Interface : public hardware_interface::SystemInterface
 {
 public:
   SOARM100Interface();
   virtual ~SOARM100Interface();
 
-  // LifecycleNodeInterface
-  CallbackReturn on_init(const hardware_interface::HardwareComponentInterfaceParams & params) override;
-  CallbackReturn on_activate(const rclcpp_lifecycle::State &previous_state) override;
-  CallbackReturn on_deactivate(const rclcpp_lifecycle::State &previous_state) override;
-
-  // SystemInterface
+  hardware_interface::return_type configure(const hardware_interface::HardwareInfo & system_info) override;
+  hardware_interface::return_type start() override;
+  hardware_interface::return_type stop() override;
+   
+  std::string get_name() const override;
+  hardware_interface::status get_status() const override;
+  
   std::vector<hardware_interface::StateInterface> export_state_interfaces() override;
   std::vector<hardware_interface::CommandInterface> export_command_interfaces() override;
-  hardware_interface::return_type read(const rclcpp::Time & time, const rclcpp::Duration & period) override;
-  hardware_interface::return_type write(const rclcpp::Time & time, const rclcpp::Duration & period) override;
-
+  hardware_interface::return_type read() override;
+  hardware_interface::return_type write() override;
+  
   // Command mode switching
   hardware_interface::return_type prepare_command_mode_switch(
       const std::vector<std::string> & start_interfaces,
@@ -55,6 +55,9 @@ public:
       const std::vector<std::string> & stop_interfaces) override;
 
 private:
+  hardware_interface::HardwareInfo info_;
+  hardware_interface::status status_{hardware_interface::status::UNKNOWN};
+
   // Command and state storage for all joints
   std::vector<double> position_commands_;
   std::vector<double> position_states_;

@@ -2,79 +2,79 @@ timestamp: '2025-02-02T13:26:42.812769'
 joints:
   Shoulder_Rotation:
     max:
-      ticks: 1307
+      ticks: 3067
       speed: 0
-      load: 0
+      load: -1
     center:
-      ticks: 2641
+      ticks: 1703
       speed: 0
       load: 0
     min:
-      ticks: 4046
-      speed: 0
+      ticks: 336
+      speed: 2328
       load: 0
   Shoulder_Pitch:
     min:
-      ticks: 3390
+      ticks: 2091
       speed: 0
       load: 0
     center:
-      ticks: 647
+      ticks: 943
       speed: 0
       load: 0
     max:
-      ticks: 1744
-      speed: 0
+      ticks: 3865
+      speed: -1
       load: 0
   Elbow:
     min:
-      ticks: 2611
+      ticks: 3239
       speed: 0
       load: 0
     center:
-      ticks: 3830
+      ticks: 1152
       speed: 0
       load: 0
     max:
-      ticks: 681
+      ticks: 1004
       speed: 50
       load: 0
   Wrist_Pitch:
     min:
-      ticks: 3322
+      ticks: 3417
       speed: 0
       load: 0
     center:
-      ticks: 320
-      speed: 0
+      ticks: 2255
+      speed: -1
       load: 0
     max:
-      ticks: 681
+      ticks: 965
       speed: 0
       load: 0
   Wrist_Roll:
     min:
-      ticks: 394
+      ticks: 1302
       speed: 0
       load: 0
     center:
-      ticks: 2369
+      ticks: 213
       speed: 0
       load: 0
     max:
-      ticks: 774
+      ticks: 2564
       speed: 0
-      load: 0
+      load: -918
   Gripper:
     min:
-      ticks: 3689
+      ticks: 1731
       speed: 0
       load: 0
     center:
-      ticks: 4043
-      speed: 0
+      ticks: 2090
+      speed: -1
       load: 0
     max:
-      ticks: 994
+      ticks: 3248
       speed: 0
       load: 0

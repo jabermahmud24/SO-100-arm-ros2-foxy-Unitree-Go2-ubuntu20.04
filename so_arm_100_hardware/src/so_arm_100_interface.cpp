@@ -12,6 +12,7 @@
 #include <string>
 #include <thread>
 #include <sstream>
+#include <algorithm>
 
 #include "rclcpp/rclcpp.hpp"
 #include <sensor_msgs/msg/joint_state.hpp>
@@ -20,6 +21,13 @@
 namespace so_arm_100_controller
 {
 SOARM100Interface::SOARM100Interface() 
+: use_serial_(false),
+  serial_port_("/dev/ttyACM0"),
+  serial_baudrate_(1000000),
+  servo_speed_(2400),
+  servo_acceleration_(50),
+  default_control_mode_(0),
+  SerialPort(-1)
 {
 }
 
@@ -30,32 +38,30 @@ SOARM100Interface::~SOARM100Interface()
     }
 }
 
-CallbackReturn SOARM100Interface::on_init(const hardware_interface::HardwareComponentInterfaceParams & params)
+hardware_interface::return_type SOARM100Interface::configure(
+		const hardware_interface::HardwareInfo & system_info)
 {
-    CallbackReturn result = hardware_interface::SystemInterface::on_init(params);
-    if (result != CallbackReturn::SUCCESS)
-    {
-        return result;
-    }
+    info_ = system_info;
+    status_ = hardware_interface::status::CONFIGURED;
 
-    use_serial_ = params.hardware_info.hardware_parameters.count("use_serial") ?
-        (params.hardware_info.hardware_parameters.at("use_serial") == "true") : false;
+    use_serial_ = info_.hardware_parameters.count("use_serial") ?
+        (info_.hardware_parameters.at("use_serial") == "true") : false;
     
-    serial_port_ = params.hardware_info.hardware_parameters.count("serial_port") ?
-        params.hardware_info.hardware_parameters.at("serial_port") : "/dev/ttyUSB0";
+    serial_port_ = info_.hardware_parameters.count("serial_port") ?
+        info_.hardware_parameters.at("serial_port") : "/dev/ttyACM0";
     
-    serial_baudrate_ = params.hardware_info.hardware_parameters.count("serial_baudrate") ?
-        std::stoi(params.hardware_info.hardware_parameters.at("serial_baudrate")) : 1000000;
+    serial_baudrate_ = info_.hardware_parameters.count("serial_baudrate") ?
+        std::stoi(info_.hardware_parameters.at("serial_baudrate")) : 1000000;
 
-    servo_speed_ = params.hardware_info.hardware_parameters.count("servo_speed") ?
-        std::stoi(params.hardware_info.hardware_parameters.at("servo_speed")) : 2400;
+    servo_speed_ = info_.hardware_parameters.count("servo_speed") ?
+        std::stoi(info_.hardware_parameters.at("servo_speed")) : 2400;
 
-    servo_acceleration_ = params.hardware_info.hardware_parameters.count("servo_acceleration") ?
-        std::stoi(params.hardware_info.hardware_parameters.at("servo_acceleration")) : 50;
+    servo_acceleration_ = info_.hardware_parameters.count("servo_acceleration") ?
+        std::stoi(info_.hardware_parameters.at("servo_acceleration")) : 50;
 
     // Default control mode: 0=position, 1=velocity, 2=effort/PWM
-    default_control_mode_ = params.hardware_info.hardware_parameters.count("control_mode") ?
-        std::stoi(params.hardware_info.hardware_parameters.at("control_mode")) : 0;
+    default_control_mode_ = info_.hardware_parameters.count("control_mode") ?
+        std::stoi(info_.hardware_parameters.at("control_mode")) : 0;
 
     size_t num_joints = info_.joints.size();
     position_commands_.resize(num_joints, 0.0);
@@ -67,7 +73,17 @@ CallbackReturn SOARM100Interface::on_init(const hardware_interface::HardwareComp
     active_control_mode_.resize(num_joints, default_control_mode_);
     servo_position_offsets_.resize(num_joints, 0);
 
-    return CallbackReturn::SUCCESS;
+    return hardware_interface::return_type::OK;
+}
+
+std::string SOARM100Interface::get_name() const
+{
+	return info_.name;
+}
+
+hardware_interface::status SOARM100Interface::get_status() const
+{
+	return status_;
 }
 
 std::vector<hardware_interface::StateInterface> SOARM100Interface::export_state_interfaces()
@@ -149,7 +165,7 @@ hardware_interface::return_type SOARM100Interface::perform_command_mode_switch(
     return hardware_interface::return_type::OK;
 }
 
-CallbackReturn SOARM100Interface::on_activate(const rclcpp_lifecycle::State & /*previous_state*/)
+hardware_interface::return_type SOARM100Interface::start()
 {
     RCLCPP_INFO(rclcpp::get_logger("SOARM100Interface"), "Activating so_arm_100 hardware interface...");
 
@@ -170,7 +186,7 @@ CallbackReturn SOARM100Interface::on_activate(const rclcpp_lifecycle::State & /*
     if (use_serial_) {
         if(!st3215_.begin(serial_baudrate_, serial_port_.c_str())) {
             RCLCPP_ERROR(rclcpp::get_logger("SOARM100Interface"), "Failed to initialize motors");
-            return CallbackReturn::ERROR;
+            return hardware_interface::return_type::ERROR;
         }
 
         // Initialize each servo
@@ -181,14 +197,14 @@ CallbackReturn SOARM100Interface::on_activate(const rclcpp_lifecycle::State & /*
             if (st3215_.Ping(servo_id) == -1) {
                 RCLCPP_ERROR(rclcpp::get_logger("SOARM100Interface"), 
                             "No response from servo %d during initialization", servo_id);
-                return CallbackReturn::ERROR;
+                return hardware_interface::return_type::ERROR;
             }
             
             // Set control mode (0=position, 1=velocity, 2=effort/PWM)
             if (!st3215_.Mode(servo_id, default_control_mode_)) {
                 RCLCPP_ERROR(rclcpp::get_logger("SOARM100Interface"), 
                             "Failed to set mode for servo %d", servo_id);
-                return CallbackReturn::ERROR;
+                return hardware_interface::return_type::ERROR;
             }
 
             // Read initial position and set command to match
@@ -244,12 +260,13 @@ CallbackReturn SOARM100Interface::on_activate(const rclcpp_lifecycle::State & /*
                        "Failed to load calibration file: %s", calib_file.c_str());
         }
     }
-
-    RCLCPP_INFO(rclcpp::get_logger("SOARM100Interface"), "Hardware interface activated");
-    return CallbackReturn::SUCCESS;
+	
+    status_ = hardware_interface::status::STARTED;
+    RCLCPP_INFO(rclcpp::get_logger("SOARM100Interface"), "Hardware interface started");
+    return hardware_interface::return_type::OK;
 }
 
-CallbackReturn SOARM100Interface::on_deactivate(const rclcpp_lifecycle::State &)
+hardware_interface::return_type SOARM100Interface::stop()
 {
     if (executor_) {
         executor_->cancel();
@@ -265,8 +282,9 @@ CallbackReturn SOARM100Interface::on_deactivate(const rclcpp_lifecycle::State &)
         }
     }
     
-    RCLCPP_INFO(rclcpp::get_logger("SOARM100Interface"), "Hardware interface deactivated.");
-    return hardware_interface::CallbackReturn::SUCCESS;
+    status_ = hardware_interface::status::STOPPED;
+    RCLCPP_INFO(rclcpp::get_logger("SOARM100Interface"), "Hardware interface stopped.");
+    return hardware_interface::return_type::OK;
 }
 
 void SOARM100Interface::feedback_callback(const sensor_msgs::msg::JointState::SharedPtr msg)
@@ -275,7 +293,7 @@ void SOARM100Interface::feedback_callback(const sensor_msgs::msg::JointState::Sh
     last_feedback_msg_ = msg;
 }
 
-hardware_interface::return_type SOARM100Interface::write(const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/)
+hardware_interface::return_type SOARM100Interface::write()
 {
     if (use_serial_ && torque_enabled_) {  // Only write if torque is enabled
         for (size_t i = 0; i < info_.joints.size(); ++i) {
@@ -350,7 +368,7 @@ hardware_interface::return_type SOARM100Interface::write(const rclcpp::Time & /*
     return hardware_interface::return_type::OK;
 }
 
-hardware_interface::return_type SOARM100Interface::read(const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/)
+hardware_interface::return_type SOARM100Interface::read()
 {
   // Apply position offset to the raw position
   auto apply_pos_offset = [](int pos, int pos_offset) -> int {

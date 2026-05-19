@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <robot name="so_arm_100_5dof" xmlns:xacro="http://ros.org/wiki/xacro">
   <xacro:arg name="prefix" default="" />
-  <xacro:arg name="initial_positions_file" default="" />
   <xacro:arg name="use_sim" default="false" />
   <xacro:arg name="use_topic_hardware_interface" default="false" />
   <xacro:arg name="use_fake_hardware" default="false" />
@@ -27,7 +26,6 @@
 
       <xacro:so_arm_100_5dof_gazebo
         prefix="$(arg prefix)"
-        initial_positions_file="$(arg initial_positions_file)"
         ros2_controllers_file="$(arg ros2_controllers_file)"
         use_topic_hardware_interface="$(arg use_topic_hardware_interface)" />
   </xacro:if>

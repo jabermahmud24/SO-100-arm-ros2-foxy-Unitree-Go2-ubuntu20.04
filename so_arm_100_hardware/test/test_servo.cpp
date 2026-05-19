@@ -7,7 +7,7 @@ SMS_STS sm_st;
 
 int main(int argc, char ** argv)
 {
-    const char* port = "/dev/ttyUSB0";
+    const char* port = "/dev/ttyACM0";
 
     // First optional positional argument is the serial port
     if (argc > 1) {
