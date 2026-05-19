@@ -849,6 +849,34 @@ for license and attribution details.
 
 ---
 
+
+
+## Disclaimer, No Warranty, and User Responsibility
+
+This repository is provided for research, educational, and experimental robotics use only.
+
+The software, configuration files, launch files, scripts, robot descriptions, and documentation in this repository are provided **"AS IS"**, without warranty of any kind. The author does not guarantee that this repository will work correctly, safely, or reliably on every robot, computer, servo, controller, power system, or ROS 2 installation.
+
+Use of this repository with real hardware is entirely at the user's own risk. Robotic arms, mobile robots, servos, power supplies, batteries, and mounted hardware can cause damage, injury, unexpected motion, electrical failure, mechanical failure, overheating, communication failure, or loss of control if configured or used incorrectly.
+
+By using this repository, the user is solely responsible for:
+
+- verifying all hardware connections;
+- checking servo power supply voltage and current limits;
+- confirming joint directions, joint limits, and controller parameters;
+- testing first in simulation or with motors safely unloaded when possible;
+- keeping the robot in a safe, open area during testing;
+- using emergency stop or power cutoff procedures;
+- complying with all applicable safety rules, lab policies, and local regulations.
+
+The author is not responsible for any damage, injury, data loss, hardware failure, robot malfunction, unsafe motion, or other consequences resulting from the use, modification, or redistribution of this repository.
+
+This repository is not an official Unitree, SO-ARM, Feetech, ROS 2, or manufacturer-supported product. Use it only if you understand the risks of operating experimental robotic hardware.
+
+See the `LICENSE` file for the full Apache License 2.0 terms, including disclaimer of warranty and limitation of liability.
+
+---
+
 ## Citation / Reference
 
 If you use this repository, please cite or acknowledge both this adaptation and the original upstream repositories:
