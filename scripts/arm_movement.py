@@ -73,7 +73,7 @@ def main():
     rclpy.init()
     node = ArmCommander()
 
-    # Put your 3 poses here
+    # Put the poses here
     poses = [
             [0.73067, -0.147, -0.0612, -1.1259, -1.6091, 0.1],   # Pose 1
             [0.00, -2.0, 1.512, -1.1259, -1.6091, 0.5],  # Pose 2],   
