@@ -23,6 +23,18 @@ Compared with the original repository, this version includes modifications for:
 - Integration/testing with the Unitree Go2 robot
 - Adjustments needed for the mounted SO-100/100-arm setup
 
+
+## Additional Acknowledgment
+
+This repository also includes and adapts the `so_arm_100_hardware` package from:
+
+https://github.com/brukg/so_arm_100_hardware
+
+The original `so_arm_100_hardware` package provides a ROS 2 Control hardware interface for the SO-ARM100 arm, including serial communication support and topic-based simulation support. This repository includes it to provide a more complete ROS 2 Foxy-compatible SO-100 arm setup for the Unitree Go2 platform.
+
+The original hardware interface package is licensed under the Apache License 2.0. Its license and attribution are preserved inside the `so_arm_100_hardware/` directory.
+
+
 # THE ORIGINAL README FILE IS AS FOLLOWS:
 
 
