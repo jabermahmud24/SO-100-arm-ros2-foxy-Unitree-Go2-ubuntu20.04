@@ -1,3 +1,31 @@
+# SO-100 Arm ROS 2 Foxy Package for Unitree Go2
+
+This repository provides a ROS 2 Foxy-compatible version of the SO-100 arm package, adapted for use with a Unitree Go2 robot running Ubuntu 20.04.
+
+## Acknowledgment
+
+This project is based on the original ROS 2 SO-100 arm repository by Bruk G.:
+
+https://github.com/brukg/SO-100-arm
+
+The original repository provided the base ROS 2 package structure, robot description, launch files, controller configuration, and MoveIt/Gazebo-related setup. This repository modifies and adapts that work to support ROS 2 Foxy and deployment on the Unitree Go2 platform.
+
+The original project is licensed under the Apache License 2.0. This repository preserves the original license and attribution.
+
+## Major Modifications
+
+Compared with the original repository, this version includes modifications for:
+
+- ROS 2 Foxy compatibility
+- Ubuntu 20.04 support
+- Dependency changes from ROS 2 Humble to Foxy
+- Launch/configuration updates for Foxy
+- Integration/testing with the Unitree Go2 robot
+- Adjustments needed for the mounted SO-100/100-arm setup
+
+THE ORIGINAL README FILE IS AS FOLLOWS:
+
+
 # SO-100 Robot Arm ROS2 Package
 
 This package provides ROS2 support for the SO-100 robot arm, available in 5-DOF configuration. It is based on the open-source 3D printable [SO-ARM100](https://github.com/TheRobotStudio/SO-ARM100) project by The Robot Studio. This implementation includes URDF models, Gazebo simulation support, and MoveIt2 integration.
